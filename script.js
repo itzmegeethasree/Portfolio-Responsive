@@ -32,13 +32,19 @@ const observer = new IntersectionObserver(entries => {
 sections.forEach(section => observer.observe(section));
 
 // Form Validation and Submission
+// Initialize EmailJS
+(function(){
+    emailjs.init("Ou10ctH9A0PiNjwaJ"); 
+})();
+
+// Handle form submission
 document.getElementById('contact-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    
+
     let name = document.querySelector('input[placeholder="Your Name"]').value.trim();
     let email = document.querySelector('input[placeholder="Your Email"]').value.trim();
     let message = document.querySelector('textarea').value.trim();
-    
+
     if (!name || !email || !message) {
         alert('Please fill out all fields before submitting.');
         return;
@@ -49,7 +55,17 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
         return;
     }
 
-    alert('Form submitted successfully!');
+    // Send email via EmailJS
+    emailjs.send("service_kabznl3", "template_3nuz74o", {
+        from_name: name,
+        from_email: email,
+        message: message
+    }).then(function(response) {
+        alert('Message sent successfully!');
+        document.getElementById('contact-form').reset();
+    }, function(error) {
+        alert('Failed to send message. Please try again.');
+    });
 });
 
 // Email Validation Function
